@@ -9,6 +9,7 @@ const hoursSpan = document.querySelector('[data-hours]');
 const minutesSpan = document.querySelector('[data-minutes]');
 const secondsSpan = document.querySelector('[data-seconds]');
 const startBtn = document.querySelector('button[data-start]');
+const input = document.querySelector('input')
 
 
 const options = {
@@ -66,6 +67,7 @@ startBtn.addEventListener('click', () => {
 
       }, interval);
       startBtn.toggleAttribute('disabled');
+      input.toggleAttribute('disabled')
   }
 });
 
