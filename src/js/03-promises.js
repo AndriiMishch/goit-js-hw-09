@@ -36,10 +36,10 @@ function onSubmit(event) {
   }  else {
     for (let i = 1; i <= amountValue; i += 1) {
       createPromise
-        .then(() => {
+        .then(({ position, delay }) => {
           Notify.success(`Fulfilled promise ${position} in ${delay}ms`);
         })
-        .catch(() => {
+        .catch(({ position, delay }) => {
           Notify.failure(`Rejected promise ${position} in ${delay}ms`);
         });
 
