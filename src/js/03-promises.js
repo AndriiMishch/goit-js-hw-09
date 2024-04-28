@@ -7,8 +7,10 @@ const delay = document.querySelector('input[name="delay"]');
 const step = document.querySelector('input[name="step"]');
 const amount = document.querySelector('input[name="amount"]');
 
+//EVENTS
 form.addEventListener('submit', onSubmit);
 
+//FUNCTIONS
 function onSubmit(e) {
   e.preventDefault();
   let delayNum = Number(delay.value);
