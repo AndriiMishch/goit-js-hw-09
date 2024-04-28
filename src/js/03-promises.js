@@ -1,49 +1,52 @@
-import { Notify } from 'notiflix/build/notiflix-notify-aio';
+//IMPORTS
 import Notiflix from 'notiflix';
 
+//VARIABLES
 const form = document.querySelector('form');
-const delayInp = document.querySelector('input[name="delay"]');
-const stepInp = document.querySelector('input[name="step"]');
-const amountInp = document.querySelector('input[name="amount"]');
+const delay = document.querySelector('input[name="delay"]');
+const step = document.querySelector('input[name="step"]');
+const amount = document.querySelector('input[name="amount"]');
 
 form.addEventListener('submit', onSubmit);
 
+function onSubmit(e) {
+  e.preventDefault();
+  let delayNum = Number(delay.value);
+  const stepNum = Number(step.value);
+  const amountNum = Number(amount.value);
+  if (delayNum < 0 || stepNum < 0 || amountNum < 0) {
+    Notiflix.Notify.failure(`❌ All numbers should be higher then 0`);
+    return;
+  }
+  let i = 1;
+  const timeOutId = setTimeout(() => {
+    const intervalId = setInterval(() => {
+      if (i === amountNum) {
+        clearInterval(intervalId);
+      }
+      createPromise(i, delayNum)
+        .then(({ position, delay }) => {
+          Notiflix.Notify.success(
+            `✅ Fulfilled promise ${position} in ${delay}ms`
+          );
+        })
+        .catch(({ position, delay }) => {
+          Notiflix.Notify.failure(
+            `❌ Rejected promise ${position} in ${delay}ms`
+          );
+        });
+      delayNum += stepNum;
+      i += 1;
+    }, stepNum);
+  }, delayNum);
+}
 
-const createPromise = new Promise((resolve, reject) => {
-  setTimeout(() => {
+function createPromise(position, delay) {
+  return new Promise((resolve, reject) => {
     const shouldResolve = Math.random() > 0.3;
     if (shouldResolve) {
       resolve({ position, delay });
-    } else {
-      reject({ position, delay });
     }
-  }, delay);
-});
-
-
-function onSubmit(event) {
-  event.preventDefault();
-
-  let delayValue = Number(delayInp.value);
-  const stepValue = Number(stepInp.value);
-  const amountValue = Number(amountInp.value);
-  if (delayValue <0 || stepValue < 0 || amountValue <= 0) {
-    Notiflix.Report.warning(
-      "Incorrect numbers",
-      'Please choose a correct numbers',
-      'Okay'
-    );
-  }  else {
-    for (let i = 1; i <= amountValue; i += 1) {
-      createPromise
-        .then(({ position, delay }) => {
-          Notify.success(`Fulfilled promise ${position} in ${delay}ms`);
-        })
-        .catch(({ position, delay }) => {
-          Notify.failure(`Rejected promise ${position} in ${delay}ms`);
-        });
-
-      delayValue += stepValue;
-    }
-  }
+    reject({ position, delay });
+  });
 }
